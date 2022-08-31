@@ -1,7 +1,8 @@
-package com.bignerdranch.android.composition
+package com.bignerdranch.android.composition.presentaion
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.bignerdranch.android.composition.R
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
