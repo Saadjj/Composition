@@ -5,4 +5,6 @@ package com.bignerdranch.android.composition.domain.entity
      val visibleNumder:Int,
      val options:List<Int>
  ) {
+     val rightAnswer:Int
+     get()=sum-visibleNumder
 }
