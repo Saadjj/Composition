@@ -39,13 +39,12 @@ class GameFragment : Fragment() {
             add(binding.tvOption4)
             add(binding.tvOption5)
             add(binding.tvOption6)
-
         }
     }
 
     private var _binding: FragmentGameBinding? = null
     private val binding: FragmentGameBinding
-        get() = _binding ?: throw RuntimeException("FragmentGameBinding==0 ")
+        get() = _binding ?: throw RuntimeException("FragmentGameBinding == null ")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -64,11 +63,16 @@ class GameFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         //потом удалить
         observeViewModel()
+        setClickListenersToOptions()
         viewModel.startGame(level)
     }
 
-    private fun setClickListenersToOptions(){
-
+    private fun setClickListenersToOptions() {
+        for (tvOption in tvOptions) {
+            tvOption.setOnClickListener {
+                viewModel.chooseAnswer(tvOption.text.toString().toInt())
+            }
+        }
     }
 
     //подписываемся на объекты лайв дате
@@ -103,7 +107,14 @@ class GameFragment : Fragment() {
         viewModel.gameResult.observe(viewLifecycleOwner){
             launchGameFinishedFragment(it)
         }
+        viewModel.progressAnswers.observe(viewLifecycleOwner) {
+            binding.tvAnswersProgress.text = it
+        }
+    }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun getColorByState(goodState: Boolean): Int {
@@ -126,10 +137,7 @@ class GameFragment : Fragment() {
             .commit()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
+
 
     /**
      * распаковка сериализуемого объекта
