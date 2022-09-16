@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory
 import com.bignerdranch.android.composition.R
 import com.bignerdranch.android.composition.databinding.FragmentGameBinding
 import com.bignerdranch.android.composition.domain.entity.GameResult
@@ -21,13 +22,10 @@ class GameFragment : Fragment() {
     private lateinit var level: Level
 
     //обратить внимание, ленивая инициализация
-    private val viewModel: GameViewModel by lazy {
+    private val viewModel by lazy {
         ViewModelProvider(
-            this, ViewModelProvider
-                .AndroidViewModelFactory.getInstance(
-                    requireActivity()
-                        .application
-                )
+            this,
+            AndroidViewModelFactory.getInstance(requireActivity().application)
         )[GameViewModel::class.java]
     }
 
@@ -61,7 +59,6 @@ class GameFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //потом удалить
         observeViewModel()
         setClickListenersToOptions()
         viewModel.startGame(level)
