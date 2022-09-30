@@ -8,6 +8,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewTreeLifecycleOwner
+import com.bignerdranch.android.composition.R
 import com.bignerdranch.android.composition.databinding.FragmentGameFinishedBinding
 import com.bignerdranch.android.composition.domain.entity.GameResult
 
@@ -25,6 +26,7 @@ class GameFinishedFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         parseArgs()
+
     }
 
     override fun onCreateView(
@@ -37,6 +39,12 @@ class GameFinishedFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupClickListeners()
+        bindViews()
+
+    }
+
+    private fun setupClickListeners() {
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 retryGame()
@@ -48,21 +56,69 @@ class GameFinishedFragment : Fragment() {
         }
     }
 
+    /**
+     * привязка вьюшек
+     */
+    private fun bindViews() {
+        with(binding) {
+            emojiResult
+                .setImageResource(
+                    getSmileResID()
+                )
+            tvRequiredAnswers.text = String.format(
+                getString(R.string.required_score),
+                gameResult.gameSettings.minCountOfRightAnswers
+            )
+            tvScoreAnswers.text = String.format(
+                getString(R.string.score_answers),
+                gameResult.countOfRightAnswers
+            )
+            tvRequiredPercentage.text = String.format(
+                getString(R.string.required_percentage),
+                gameResult.gameSettings.minPercentOfRightAnswers
+            )
+            tvScorePercentage.text = String.format(
+                getString(R.string.score_percentage),
+                getPercentOfRightAnswers()
+            )
+        }
+
+        getSmileResID()
+    }
+
+    private fun getPercentOfRightAnswers():Int {
+        if(gameResult.countOfQuestions==0){
+           return 0
+        }else{
+            return  (gameResult.countOfRightAnswers*100)/gameResult.countOfQuestions
+        }
+
+    }
+
+    private fun getSmileResID(): Int {
+        return if (gameResult.winner) {
+            R.drawable.ic_smile
+        } else {
+            R.drawable.ic_sad
+        }
+    }
+
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 
     private fun parseArgs() {
-        requireArguments().getParcelable<GameResult>(KEY_GAME_RESULT)?.let{
-            gameResult=it
+        requireArguments().getParcelable<GameResult>(KEY_GAME_RESULT)?.let {
+            gameResult = it
         }
     }
 
     /**
      * переход к началу игры
      */
-    private fun retryGame(){
+    private fun retryGame() {
         //0 чтобы фрагмент не был удален из стека
         requireActivity().supportFragmentManager.popBackStack(
             GameFragment.NAME,
