@@ -67,7 +67,7 @@ class GameFragment : Fragment() {
         setClickListenersToOptions()
 
     }
-
+//уфф
     private fun setClickListenersToOptions() {
         for (tvOption in tvOptions) {
             tvOption.setOnClickListener {
