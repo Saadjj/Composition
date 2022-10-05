@@ -21,11 +21,15 @@ class GameFragment : Fragment() {
 
     private lateinit var level: Level
 
+    private val viewModelFactory by lazy{
+        GameViewModelFactory(level, requireActivity().application )
+    }
+
     //обратить внимание, ленивая инициализация
     private val viewModel by lazy {
         ViewModelProvider(
             this,
-            AndroidViewModelFactory.getInstance(requireActivity().application)
+            viewModelFactory
         )[GameViewModel::class.java]
     }
 
