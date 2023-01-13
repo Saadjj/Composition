@@ -16,8 +16,9 @@ import com.bignerdranch.android.composition.domain.entity.Question
 import com.bignerdranch.android.composition.domain.usecases.GenerateQuestionUseCase
 import com.bignerdranch.android.composition.domain.usecases.GetGameSettingsUseCase
 
-//наследуемся от AndroidViewModel() для того чтобы можно было сипользовать контекст(для извлечения строковых ресурсов)
+//наследуемся от AndroidViewModel() для того чтобы можно было иcпользовать контекст(для извлечения строковых ресурсов)
 class GameViewModel(
+    //application это само приложение
     private val application: Application,
     private val level:Level
 ) : ViewModel() {
