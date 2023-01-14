@@ -8,6 +8,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewTreeLifecycleOwner
+import androidx.navigation.fragment.findNavController
 import com.bignerdranch.android.composition.R
 import com.bignerdranch.android.composition.databinding.FragmentGameFinishedBinding
 import com.bignerdranch.android.composition.domain.entity.GameResult
@@ -45,12 +46,6 @@ class GameFinishedFragment : Fragment() {
     }
 
     private fun setupClickListeners() {
-        val callback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                retryGame()
-            }
-        }
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
         binding.buttonRetry.setOnClickListener {
             retryGame()
         }
@@ -119,15 +114,11 @@ class GameFinishedFragment : Fragment() {
      * переход к началу игры
      */
     private fun retryGame() {
-        //0 чтобы фрагмент не был удален из стека
-        requireActivity().supportFragmentManager.popBackStack(
-            GameFragment.NAME,
-            FragmentManager.POP_BACK_STACK_INCLUSIVE
-        )
+       findNavController().popBackStack()
     }
 
     companion object {
-        private const val KEY_GAME_RESULT = "game_result"
+         const val KEY_GAME_RESULT = "game_result"
 
         /**
          * фабричный метод для создания объектов GameFinishedFragment

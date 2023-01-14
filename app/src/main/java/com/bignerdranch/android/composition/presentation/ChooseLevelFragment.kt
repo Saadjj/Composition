@@ -1,10 +1,13 @@
 package com.bignerdranch.android.composition.presentation
 
 import android.os.Bundle
+import android.view.Gravity.apply
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.GravityCompat.apply
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.bignerdranch.android.composition.R
 import com.bignerdranch.android.composition.databinding.FragmentChooseLevelBinding
 import com.bignerdranch.android.composition.databinding.FragmentWelcomeBinding
@@ -58,11 +61,14 @@ class ChooseLevelFragment : Fragment() {
      * переход к фрагменту игры
      */
     private fun launchGameFragment(level: Level){
-        requireActivity().supportFragmentManager.beginTransaction()
-            .replace(R.id.main_container,GameFragment.newInstance(level))
-                //указываем имя фрагмента чтобы потом можно было его удалить из стека
-            .addToBackStack(GameFragment.NAME)
-            .commit()
+        // пременная необходимая для передачи данных в GameFragment
+       val args=Bundle().apply{
+           putParcelable(GameFragment.KEY_LEVEL, level)
+       }
+        //здесь используется преход между фрагментами
+        // с помощью Navcontrollera, однако при таком способе мы
+        // не передаем парметр level
+      findNavController().navigate(R.id.action_chooseLevelFragment_to_gameFragment,args)
     }
     companion object{
 
