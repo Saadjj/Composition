@@ -61,22 +61,12 @@ class ChooseLevelFragment : Fragment() {
      * переход к фрагменту игры
      */
     private fun launchGameFragment(level: Level){
-        // пременная необходимая для передачи данных в GameFragment
-       val args=Bundle().apply{
-           putParcelable(GameFragment.KEY_LEVEL, level)
-       }
         //здесь используется преход между фрагментами
         // с помощью Navcontrollera, однако при таком способе мы
-        // не передаем парметр level
-      findNavController().navigate(R.id.action_chooseLevelFragment_to_gameFragment,args)
+        // не передаем парметр level( он передается через  дефолтный параметр на экране main_navigation)
+      findNavController().navigate(
+          ChooseLevelFragmentDirections.actionChooseLevelFragmentToGameFragment(level))
     }
-    companion object{
 
-        const val NAME="ChooseLevelFragment"
-
-        fun newInstance():ChooseLevelFragment{
-            return ChooseLevelFragment()
-        }
-    }
 
 }

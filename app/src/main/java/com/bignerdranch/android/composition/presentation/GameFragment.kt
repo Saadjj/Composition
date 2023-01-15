@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.bignerdranch.android.composition.R
 import com.bignerdranch.android.composition.databinding.FragmentGameBinding
 import com.bignerdranch.android.composition.domain.entity.GameResult
@@ -18,12 +19,14 @@ import com.bignerdranch.android.composition.domain.entity.Level
 
 
 class GameFragment : Fragment() {
-
-
-    private lateinit var level: Level
+    //вызов аргументов из класса GameFragment
+    // используя JetPackNavigation, та же как и при
+    // использовании by lazy, она не будет
+    // проинициализирована  до обращения к ней
+    private val args by navArgs<GameFragmentArgs>()
 
     private val viewModelFactory by lazy{
-        GameViewModelFactory(level, requireActivity().application )
+        GameViewModelFactory(args.level, requireActivity().application )
     }
 
     //обратить внимание, ленивая инициализация
@@ -49,10 +52,6 @@ class GameFragment : Fragment() {
     private val binding: FragmentGameBinding
         get() = _binding ?: throw RuntimeException("FragmentGameBinding == null ")
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        parseArgs()
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -133,39 +132,9 @@ class GameFragment : Fragment() {
      * переход к фрагменту конца игры
      */
     private fun launchGameFinishedFragment(gameResult: GameResult) {
-        val args=Bundle().apply{
-            putParcelable(GameFinishedFragment.KEY_GAME_RESULT, gameResult)
-        }
-       findNavController().navigate(R.id.action_gameFragment_to_gameFinishedFragment, args)
+       // переход между фрагментами осуществляется с помощью jetpackNavigation, аргументы так же передаются через класс mainNavigationFragment
+       findNavController().navigate(GameFragmentDirections.actionGameFragmentToGameFinishedFragment(gameResult))
     }
 
 
-
-    /**
-     * распаковка сериализуемого объекта
-     */
-    private fun parseArgs() {
-        //явное приведение
-        requireArguments().getParcelable<Level>(KEY_LEVEL)?.let {
-            level = it
-        }
-    }
-
-    companion object {
-
-        const val NAME = "GameFragment"
-
-        const val KEY_LEVEL = "level"
-
-        /**
-         * фабричный метод для создания объектов GameFragment
-         */
-        fun newInstance(level: Level): GameFragment {
-            return GameFragment().apply {
-                arguments = Bundle().apply {
-                    putParcelable(KEY_LEVEL, level)
-                }
-            }
-        }
-    }
 }
