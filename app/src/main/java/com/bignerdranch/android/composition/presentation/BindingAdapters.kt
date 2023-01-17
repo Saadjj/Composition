@@ -1,8 +1,13 @@
 package com.bignerdranch.android.composition.presentation
 
+import android.content.Context
+import android.content.res.ColorStateList
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
+import androidx.lifecycle.ViewModel
 import com.bignerdranch.android.composition.R
 import com.bignerdranch.android.composition.domain.entity.GameResult
 
@@ -61,5 +66,31 @@ private fun getSmileResID(winner:Boolean): Int {
         R.drawable.ic_sad
     }
 }
+@BindingAdapter("enoughCount")
+fun bindEnoughCount(textView: TextView, boolean: Boolean){
+           textView.setTextColor(getColorByState(textView.context, boolean))
+    }
+
+@BindingAdapter("enoughPercent")
+fun bindEnoughPercent(progressBar:ProgressBar, boolean: Boolean){
+    val color = getColorByState(progressBar.context, boolean)
+    progressBar.progressTintList= ColorStateList.valueOf(color)
+}
+
+
+private fun getColorByState(context: Context, goodState: Boolean): Int {
+    val colorResId = if (goodState) {
+        android.R.color.holo_green_dark
+    } else {
+        android.R.color.holo_red_dark
+    }
+    return ContextCompat.getColor(context, colorResId)
+
+}
+@BindingAdapter("numberAsText")
+fun bindingNumberAsText(textView: TextView, int:Int){
+textView.text=int.toString()
+}
+
 
 
