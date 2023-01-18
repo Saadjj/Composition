@@ -37,16 +37,7 @@ class GameFragment : Fragment() {
         )[GameViewModel::class.java]
     }
 
-    private val tvOptions by lazy {
-        mutableListOf<TextView>().apply {
-            add(binding.tvOption1)
-            add(binding.tvOption2)
-            add(binding.tvOption3)
-            add(binding.tvOption4)
-            add(binding.tvOption5)
-            add(binding.tvOption6)
-        }
-    }
+
 
     private var _binding: FragmentGameBinding? = null
     private val binding: FragmentGameBinding
@@ -69,17 +60,11 @@ class GameFragment : Fragment() {
         binding.viewModel=viewModel
         binding.lifecycleOwner=viewLifecycleOwner
         observeViewModel()
-        setClickListenersToOptions()
+
 
     }
 
-    private fun setClickListenersToOptions() {
-        for (tvOption in tvOptions) {
-            tvOption.setOnClickListener {
-                viewModel.chooseAnswer(tvOption.text.toString().toInt())
-            }
-        }
-    }
+
 
     //подписываемся на объекты лайв дате
     private fun observeViewModel() {

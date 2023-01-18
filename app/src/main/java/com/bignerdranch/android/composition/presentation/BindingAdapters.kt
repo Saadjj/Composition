@@ -11,6 +11,10 @@ import androidx.lifecycle.ViewModel
 import com.bignerdranch.android.composition.R
 import com.bignerdranch.android.composition.domain.entity.GameResult
 
+interface OnOptionClickListener{
+    fun onOptionClick(option:Int)
+}
+
 @BindingAdapter("requiredAnswers")
 fun bindRequiredAnswers(textView:TextView, count: Int){
     textView.text = String.format(
@@ -67,13 +71,13 @@ private fun getSmileResID(winner:Boolean): Int {
     }
 }
 @BindingAdapter("enoughCount")
-fun bindEnoughCount(textView: TextView, boolean: Boolean){
-           textView.setTextColor(getColorByState(textView.context, boolean))
+fun bindEnoughCount(textView: TextView, enough: Boolean){
+           textView.setTextColor(getColorByState(textView.context, enough))
     }
 
 @BindingAdapter("enoughPercent")
-fun bindEnoughPercent(progressBar:ProgressBar, boolean: Boolean){
-    val color = getColorByState(progressBar.context, boolean)
+fun bindEnoughPercent(progressBar:ProgressBar, enough: Boolean){
+    val color = getColorByState(progressBar.context, enough)
     progressBar.progressTintList= ColorStateList.valueOf(color)
 }
 
@@ -92,5 +96,11 @@ fun bindingNumberAsText(textView: TextView, int:Int){
 textView.text=int.toString()
 }
 
+@BindingAdapter("onOptionClickListener")
+fun bindingOnOptionClickListener(textView: TextView, clickListener:OnOptionClickListener){
+textView.setOnClickListener{
+    clickListener.onOptionClick(textView.text.toString().toInt())
+}
+}
 
 
